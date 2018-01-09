@@ -76,9 +76,29 @@ ENV LD_LIBRARY_PATH /root/.mujoco/mjpro131/bin:$LD_LIBRARY_PATH
 RUN conda create -n py36 anaconda python=3.6
 RUN conda install --name py36 numpy
 RUN conda install --name py36 pytorch torchvision -c pytorch
-RUN /bin/bash -c "source activate py36 && pip install gym[mujoco] tqdm visdom"
+RUN /bin/bash -c "source activate py36 && pip install gym[mujoco] tqdm visdom pysc2"
+
+# Install SC2
+RUN wget http://blzdistsc2-a.akamaihd.net/Linux/SC2.3.16.1.zip && \
+  unzip -P iagreetotheeula SC2.3.16.1.zip -d ~/ && \
+  wget http://blzdistsc2-a.akamaihd.net/MapPacks/Ladder2017Season1.zip && \
+  wget http://blzdistsc2-a.akamaihd.net/MapPacks/Ladder2017Season2.zip && \
+  wget http://blzdistsc2-a.akamaihd.net/MapPacks/Ladder2017Season3.zip && \
+  wget http://blzdistsc2-a.akamaihd.net/MapPacks/Melee.zip && \
+  unzip -P iagreetotheeula Ladder2017Season1.zip -d ~/StarCraftII/Maps && \
+  unzip -P iagreetotheeula Ladder2017Season2.zip -d ~/StarCraftII/Maps && \
+  unzip -P iagreetotheeula Ladder2017Season3.zip -d ~/StarCraftII/Maps && \
+  unzip -P iagreetotheeula Melee.zip -d ~/StarCraftII/Maps && \
+  rm *.zip && \
+  echo "wget http://blzdistsc2-a.akamaihd.net/ReplayPacks/3.16.1-Pack_1-fix.zip && unzip -P iagreetotheeula 3.16.1-Pack_1-fix.zip -d ~/StarCraftII/Replays" > download_replays.sh
 
 COPY ./vendor/10_nvidia.json /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+
+RUN mkdir /opencv && \
+  curl -fsSL http://bit.ly/OpenCV-Latest | bash -s /opencv-build && \
+  rm -rf /opencv-build
+
+ENV PYTHONPATH=$PYTHONPATH:$HOME/.opencv/lib/python3.2/dist-package
 
 WORKDIR /workspace
 
