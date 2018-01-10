@@ -19,8 +19,8 @@ FROM nvidia/cuda:8.0-devel-ubuntu16.04
 
 LABEL maintainer="denisyarats@gmail.com"
 
-# Expose ports for IPython and VNC
-EXPOSE 5900 8888
+# Expose ports for VNC, Visdom and IPython
+EXPOSE 5900 8097 8888
 
 ENV LANG C.UTF-8
 
@@ -51,6 +51,7 @@ RUN apt-get update -q && \
   lxterminal \
   tightvncserver \
   xpra \
+  tmux \
   xserver-xorg-dev && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
@@ -74,9 +75,9 @@ ENV LD_LIBRARY_PATH /root/.mujoco/mjpro131/bin:$LD_LIBRARY_PATH
 
 # Create conda env and install dependencies
 RUN conda create -n py36 anaconda python=3.6
-RUN conda install --name py36 numpy
+RUN conda install --name py36 numpy opencv
 RUN conda install --name py36 pytorch torchvision -c pytorch
-RUN /bin/bash -c "source activate py36 && pip install gym[mujoco] tqdm visdom pysc2"
+RUN /bin/bash -c "source activate py36 && pip install gym[mujoco] gym[atari] tqdm visdom pysc2"
 
 # Install SC2
 RUN wget http://blzdistsc2-a.akamaihd.net/Linux/SC2.3.16.1.zip && \
