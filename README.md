@@ -19,3 +19,6 @@ And start the container via:
 nvidia-docker run -v {LOCAL_CODE_DIR}:/workspace/code -it -p 5902:5900  -p 8888:8888 -p 8097:8097 --rm rlenv
 ```
 This will run the container, open up VNC port (5902), ipython notebook port (8888), Visdom port (8097), as well as mount a local folder of your choice (need to replace ``{LOCAL_CODE_DIR}``) to the container's ``/workspace/code``. You will be directed to a shell with Anaconda enviroment (Python 3.6) enabled.
+
+# VNC
+To access the graphical interface, launch your favourite VNC client (for example Screen Sharing in MacOS) and use ``localhost:5902`` for the host, and ``123456`` for the password.
